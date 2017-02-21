@@ -120,7 +120,9 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="Dialogs\EchoDialog.cs" />
+    <Compile Include="Dialogs\BranchLocatorDialog.cs" />
+    <Compile Include="Dialogs\ChooseDialog.cs" />
+    <Compile Include="Dialogs\ClaimsDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
