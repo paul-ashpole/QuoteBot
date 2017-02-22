@@ -1,5 +1,7 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
+using QuoteBot.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -11,7 +13,7 @@ namespace QuoteBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Welcome to the Swinton website. How can we help you today?");
-            context.Wait(ConversationStartedAsync);
+            context.Wait(ConversationStartedAsync);            
         }
 
         private async Task ConversationStartedAsync(IDialogContext context, IAwaitable<object> result)
@@ -31,6 +33,10 @@ namespace QuoteBot.Dialogs
             {
                 context.Call(new BranchLocatorDialog(), DialogCompletedAsync);
             }
+            else if (message.Text.Contains("quote"))
+            {
+                context.Call(FormDialog.FromForm(RiskData.BuildForm,options: FormOptions.PromptInStart), RiskCaptureDialogCompletedAsync);
+            }
             else if (message.Text.Contains("no"))
             {
                 await context.PostAsync("Thanks for chatting!");
@@ -42,6 +48,12 @@ namespace QuoteBot.Dialogs
                 context.Wait(ChoiceMadeAsync);
             }
 
+        }
+
+        private async Task RiskCaptureDialogCompletedAsync(IDialogContext context, IAwaitable<RiskData> result)
+        {
+            await context.PostAsync("Thank you for supplying your information. We're searching for our best price");
+            context.Call(new QuoteDialog(), DialogCompletedAsync);
         }
 
         private async Task DialogCompletedAsync(IDialogContext context, IAwaitable<object> result)
